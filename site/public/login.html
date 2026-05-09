@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    
 
     <main class="container-login">
 
@@ -17,12 +16,12 @@
                 <h1>LOGIN</h1>
 
                 <label>Email</label>
-                <input type="text">
+                <input id="inp_email" type="text">
 
                 <label>Senha</label>
-                <input type="password">
+                <input id="inp_senha" type="password">
 
-                <button>ENTRAR</button>
+                <button onclick="entrar()">ENTRAR</button>
             </div>
 
             <p>
@@ -39,3 +38,35 @@
 
 </body>
 </html>
+
+<script>
+    async function entrar() {
+        let email = inp_email.value;
+        let senha = inp_senha.value;
+
+        if (email == "" || senha == "") {
+            return alert('Preencha todos os campos');
+        }
+
+        try {
+            const resposta = await fetch('http://localhost:3333/usuarios/autenticar-directon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    emailServer: email,
+                    senhaServer: senha
+                })
+            });
+
+            if (resposta.ok) {
+                alert('Login realizado com sucesso!');
+                window.location = "../Perfil.html";
+            } else {
+                const erro = await resposta.text();
+                alert('Erro: ' + erro);
+            }
+        } catch (e) {
+            alert('Erro ao conectar com o servidor');
+        }
+    }
+</script>

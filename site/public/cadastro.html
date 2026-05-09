@@ -19,19 +19,19 @@
             <div class="box-cadastro">
                 <h1>CADASTRO</h1>
 
-                <label>Usuário</label>
-                <input type="text">
+                <label>Nome</label>
+                <input id="inp_nome" type="text">
 
                 <label>Email</label>
-                <input type="email">
+                <input id="inp_email" type="email">
 
                 <label>Insira sua senha</label>
-                <input type="password">
+                <input id="inp_senha" type="password">
 
                 <label>Confirme sua senha</label>
-                <input type="password">
+                <input id="inp_confSenha" type="password">
 
-                <button>CADASTRAR-SE</button>
+                <button onclick="cadastrar()">CADASTRAR-SE</button>
             </div>
 
             <p>
@@ -45,3 +45,43 @@
 
 </body>
 </html>
+<script>
+    async function cadastrar() {
+        let nome = inp_nome.value;
+        let email = inp_email.value;
+        let senha = inp_senha.value;
+        let confirmacao = inp_confSenha.value;
+
+        if (nome == "" || email == "" || senha == "" || confirmacao == "") {
+            return alert('Preencha todos os campos');
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+            return alert('Email inválido');
+        }
+        if (senha !== confirmacao) {
+            return alert('Senhas não coincidem');
+        }
+
+        try {
+            const resposta = await fetch('http://localhost:3333/usuarios/cadastrar-directon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nomeServer: nome,
+                    emailServer: email,
+                    senhaServer: senha
+                })
+            });
+
+            if (resposta.ok) {
+                alert('Cadastro realizado com sucesso!');
+                window.location = "login.html";
+            } else {
+                const erro = await resposta.text();
+                alert('Erro: ' + erro);
+            }
+        } catch (e) {
+            alert('Erro ao conectar com o servidor');
+        }
+    }
+</script>
