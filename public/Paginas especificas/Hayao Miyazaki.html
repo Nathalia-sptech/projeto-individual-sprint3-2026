@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayao Miyazaki</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <script>
+        if (!localStorage.getItem('usuarioLogado')) {
+            alert('Você precisa estar logado para acessar esta página!');
+            window.location = "../login.html";
+        }
+    </script>
+
+    <header>
+        <a class="logo" href="../index.html">Direct.on</a>
+        <nav>
+            <li class="links">
+               <a href="#">Conheça</a>
+               <a href="#">quiz</a>
+            </li>
+        </nav>
+        <div class="cadLog" id="cadLog"></div>
+    </header>
+
+    <section class="historia">
+        <div class="foto">
+            <img src="../style\assets\Hayao Miazaky.svg" alt="">
+            <ul>
+                <li>5 de janeiro de 1941 (85 anos)</li>
+                <li>Tóquio, Japão (cidade natal)</li>
+                <li>(Oscar: Melhor Animação) A Viagem de Chihiro - 2003</li>
+                <li>(Oscar: Melhor Animação) O Menino e a Garça - 2024</li>
+                <p>"Quando eu era jovem, pensava que este era o melhor trabalho do mundo, mas agora sei que é uma maldição... uma bela maldição."</p>
+            </ul>
+        </div>
+        <p>filmes populares</p>
+        <div class="filmes">
+            <img src="..\style\assets\Meu amigo totoro (hayao).svg" alt="">
+            <img src="..\style\assets\A viagem de chihiro (hayao).svg" alt="">
+            <img src="..\style\assets\O menino e a garça(hayao).svg" alt="">
+            <img src="..\style\assets\O castelo animado (hayao).svg" alt="">
+        </div>
+    </section>
+    <hr>
+
+    <section class="dashboard">
+        <div>
+            <canvas id="myChart1"></canvas>
+        </div>
+        <div>
+            <canvas id="myChart2"></canvas>
+        </div>
+    </section>
+
+    <section>
+        <div class="footer">
+            © Direct.on 2026 Feito Por Nathália Albuquerque
+        </div>
+    </section>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx1 = document.getElementById('myChart1');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5],
+                    borderWidth: 1
+                    ,
+                    backgroundColor: '#ad0000'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                
+            }
+        });
+
+        const ctx2 = document.getElementById('myChart2');
+new Chart(ctx2, {
+    type: 'radar',
+    data: {
+        labels: ['Terror', 'Drama', 'Romance', 'Comédia', 'Ação'],
+        datasets: [{
+            label: 'Quantidade de filmes por gênero',
+            data: [0, 10, 6, 7, 3],
+            borderWidth: 2,
+            borderColor: '#f7b800',
+            backgroundColor: 'rgba(247, 184, 0, 0.2)',
+            pointBackgroundColor: '#f7b800'
+        }]
+    },
+    options: {
+        scales: {
+            r: {
+                grid: {
+                    color: '#f7b800'
+                },
+                angleLines: {
+                    color: '#f7b800'
+                },
+                pointLabels: {
+                    color: 'white'
+                },
+                ticks: {
+                    color: 'white',
+                    backdropColor: 'transparent'
+                }
+            }
+        }
+    }
+});
+
+
+
+        const usuario = localStorage.getItem('usuarioLogado');
+        const cadLog = document.getElementById('cadLog');
+
+        if (usuario) {
+            cadLog.innerHTML = `<a href="../Perfil.html"><button>Seu Perfil</button></a>`;
+        } else {
+            cadLog.innerHTML = `
+                <a href="../cadastro.html"><button>Cadastre-se</button></a>
+                <a href="../login.html"><button>Login</button></a>
+            `;
+        }
+    </script>
+</body>
+</html>

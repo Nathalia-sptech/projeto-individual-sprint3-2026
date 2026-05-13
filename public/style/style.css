@@ -407,6 +407,8 @@ li.links a:hover{
 
 
 /* Página Específica*/
+
+
 .historia .foto{
     display: flex;
    flex-direction: row;
@@ -454,4 +456,42 @@ li.links a:hover{
     gap: 20px;
     flex-wrap: wrap;
     margin-top: 5px;
+}
+
+/*dashboard*/
+
+.dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 150px;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+#myChart2 {
+    width: 500px;
+    height: auto;
+}
+
+#myChart1 {
+    width: 700px;
+    height: auto; 
+}
+
+/*perfil*/
+
+.saudacao{
+    font-size: 20px;
+    font-family: Open Sans;
+}
+
+.favoritos{
+    font-size: 40px;
+    color: #f7b800;
+    font-family: Bebas Neue;
+}
+
+.diretoresPreferidos{
+    margin-top: 10px;
 }

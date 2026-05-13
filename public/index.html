@@ -15,11 +15,7 @@
                <a href="#">quiz</a>
             </li>
         </nav>
-        <div class="cadLog">
-        <a href="cadastro.html"><button>Cadastre-se</button></a>
-        <a href="login.html"><button>Login</button></a>
-        </div>
-        
+        <div class="cadLog" id="cadLog"></div>
     </header>
 
     <section class="banner_video">
@@ -38,82 +34,48 @@
     </section>
     
     <section class="diretores">
-        
         <p>DIRETORES:</p>
-
         <div class="carrossel">
             <div class="PagEsp">
                 <a href="Paginas especificas\Francis F. Coppola.html">
-                     <div class="overlay">
-                    <p class="nome">Francis F. Coppola</p>
-                </div>
+                    <div class="overlay"><p class="nome">Francis F. Coppola</p></div>
                     <img src="style\assets\Francis Ford Coppola.svg" alt=""></a>
-               
             </div>
-                <!--colocar uma estrela com o nome no overlay-->
             <div class="PagEsp">
                 <a href="Paginas especificas\Jordan Peele.html">
-                    <div class="overlay">
-                    <p class="nome">Jordan Peele</p>
-                </div>
+                    <div class="overlay"><p class="nome">Jordan Peele</p></div>
                     <img src="style\assets\Jordan Peele.svg" alt=""></a>
-                
             </div>
-
             <div class="PagEsp">
                 <a href="Paginas especificas\Martin Scorsese.html">
-                    <div class="overlay">
-                    <p class="nome">Martin Scorsese</p>
-                </div>
+                    <div class="overlay"><p class="nome">Martin Scorsese</p></div>
                     <img src="style\assets\Martin Scorsese.svg" alt=""></a>
-                
             </div>
-
             <div class="PagEsp">
                 <a href="Paginas especificas\Ryan Gogler.html">
-                    <div class="overlay">
-                    <p class="nome">Ryan Gogler</p>
-                </div>
+                    <div class="overlay"><p class="nome">Ryan Gogler</p></div>
                     <img src="style\assets\Ryan Gogler.svg" alt=""></a>
-                
             </div>
-            
             <div class="PagEsp">
                 <a href="Paginas especificas\Walter Salles.html">
-                    <div class="overlay">
-                    <p class="nome">Walter Salles</p>
-                </div>
+                    <div class="overlay"><p class="nome">Walter Salles</p></div>
                     <img src="style\assets\Walter Salles.svg" alt=""></a>
-                
             </div>
-            
             <div class="PagEsp">
                 <a href="Paginas especificas\Sofia Coppola.html">
-                    <div class="overlay">
-                    <p class="nome">Sofia Coppola</p>
-                </div>
+                    <div class="overlay"><p class="nome">Sofia Coppola</p></div>
                     <img src="style\assets\Sofia Coppola.svg" alt=""></a>
-                
             </div>
-            
             <div class="PagEsp">
                 <a href="Paginas especificas\Hayao Miyazaki.html">
-                    <div class="overlay">
-                    <p class="nome">Hayao Miyazaki</p>
-                </div>
+                    <div class="overlay"><p class="nome">Hayao Miyazaki</p></div>
                     <img src="style\assets\Hayao Miazaky.svg" alt=""></a>
-                
             </div>
-            
             <div class="PagEsp">
                 <a href="Paginas especificas\Quentin Tarantino.html">
-                    <div class="overlay">
-                    <p class="nome">Quentin Tarantino</p>
-                </div>
+                    <div class="overlay"><p class="nome">Quentin Tarantino</p></div>
                     <img src="style\assets\Quentin Tarantino.svg" alt=""></a>
-                
             </div>
-    
         </div>
     </section>
 
@@ -123,8 +85,24 @@
         </div>
     </section>
 </body>
-</html>
 
+<script>
+    const usuario = localStorage.getItem('usuarioLogado');
+    const cadLog = document.getElementById('cadLog');
+
+    if (usuario) {
+        const dados = JSON.parse(usuario);
+        cadLog.innerHTML = `
+            <a href="Perfil.html"><button>Seu Perfil</button></a>
+        `;
+    } else {
+        cadLog.innerHTML = `
+            <a href="cadastro.html"><button>Cadastre-se</button></a>
+            <a href="login.html"><button>Login</button></a>
+        `;
+    }
+</script>
+</html>
 
 
 
