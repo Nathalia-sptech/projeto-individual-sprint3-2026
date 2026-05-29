@@ -13,6 +13,7 @@
         <nav>
             <span class="saudacao" id="saudacao">Olá!</span>
         </nav>
+        <span class="cadLog"><button onclick="sair()">Sair</button></span>
     </header>
 
     <section class="diretoresPreferidos">
@@ -21,6 +22,12 @@
         <div class="diretoresFav">
             <img src="" alt="">
 
+        </div>
+    </section>
+
+    <section class="comentarios">
+        <div class="boxComentario">
+            <p>seus comentários:</p>
         </div>
     </section>
 </body>
@@ -32,7 +39,12 @@
         const dados = JSON.parse(usuario);
         document.getElementById('saudacao').innerText = `Olá, ${dados.usuario.usuario}!`; 
     } else {
-        window.location = "public/login.html";
+        window.location = "login.html";
     }
+
+    function sair() {
+    localStorage.removeItem('usuarioLogado');
+    window.location = "index.html";
+}
 </script>
 </html>

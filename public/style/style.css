@@ -449,14 +449,145 @@ li.links a:hover{
     margin-left: 20px;
 }
 
+
+
 .filmes{
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
     margin-top: 5px;
 }
+
+
+/*modal de avaliacao e comentário*/
+.foraModal{
+     display: flex;
+    justify-content: center;
+    gap: 500px;
+}
+
+.apresentarModal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.foraModal p{
+    font-family: Bebas Neue;
+    color: #f7b800;
+    font-size: 40px;
+}
+
+.favoritar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.btnFavorito{
+    color: #ad0000;
+    font-size: 100px;
+    background-color: transparent;
+}
+
+
+.open-modal{
+     color: white;
+    font-size: 20px;
+    border-radius: 40px;
+    width: 200px;
+    height: 40px;
+    background-color: #ad0000;
+    border: 1px solid white;
+}
+
+#modal-1{
+    background-color: #000;
+    border: 1px solid white;
+    width: 700px;
+    height: 500px;
+    justify-content: center;
+}
+
+.nota{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0px;
+    padding: 0;
+
+}
+
+.close-modal{
+    width: 50px;
+    color: white;
+    background-color: transparent;
+}
+
+.salvarAvaliacao{
+    margin-top: 10px;
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+    border-radius: 8px;
+    background-color: #8B0000;
+    color: white;
+    margin-bottom: 10px;
+    width: 120px;
+}
+
+
+
+.modalBody{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0px;
+    align-items: center;
+}
+
+.inputComentario p{
+    font-family: Bebas Neue;
+    color: #f7b800;
+    font-size: 30px;
+}
+
+.inputComentario textarea{
+    width: 600px;
+    height: 140px;
+    border-radius: 2px;
+    resize: none;
+}
+
+/*estrelas*/
+.star-icon{
+    list-style-type: none;
+    cursor: pointer;
+    color: #ffe500;
+    font-size: 100px;
+
+}
+
+.star-icon::after{
+    content: "\2605";
+}
+
+.star-icon.ativo ~.star-icon::after{
+    content: "\2606";
+}
+
+.nota:hover .star-icon::after{
+    content: "\2605";
+}
+
+.star-icon:hover~.star-icon::after{
+    content: "\2606";
+}
+
+
 
 /*dashboard*/
 
@@ -479,6 +610,68 @@ li.links a:hover{
     height: auto; 
 }
 
+/*KPI's*/
+    .kpis{
+        display: flex;
+        justify-content: space-between;
+        
+    }
+
+    .cardKpi{
+        width: 300px;
+        height: 200px;
+        background-color: #f7b800;
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 20px;
+    
+    }
+
+    .tituloKpi{
+        color: #8B0000;
+        font-family: Bebas Neue;
+        font-size: 30px;
+    }
+
+    .indicativoKpi{
+        color: #8B0000;
+        font-family: Bebas Neue;
+        font-size: 40px;
+    }
+
+
+    .showComentarios{
+        display: flex;
+        flex-direction: column;
+        background-color:#8B0000 ;
+        align-items: center;
+    }
+
+    .showComentarios p{
+        font-family: Bebas Neue;
+        color: #f7b800;
+        font-size: 40px;
+        
+    }
+
+    .showComentarios span{
+        display: flex;
+        color: white;
+        background-color: #ffe500;
+        width: 1300px;
+        height: auto;
+        font-size: 20px;
+        justify-content: space-between;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 20px;
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+
 /*perfil*/
 
 .saudacao{
@@ -495,3 +688,4 @@ li.links a:hover{
 .diretoresPreferidos{
     margin-top: 10px;
 }
+

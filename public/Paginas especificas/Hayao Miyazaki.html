@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hayao Miyazaki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../style/style.css">
 </head>
 <body>
@@ -24,7 +25,7 @@
         </nav>
         <div class="cadLog" id="cadLog"></div>
     </header>
-
+    
     <section class="historia">
         <div class="foto">
             <img src="../style\assets\Hayao Miazaky.svg" alt="">
@@ -46,6 +47,53 @@
     </section>
     <hr>
 
+    <!--modal de avaliação e comentário-->
+    <div class="avaliacao">
+        <div class="foraModal">
+            <div class="apresentarModal">
+                <p>avalie esse diretor:</p>
+            <button class="open-modal" data-modal="modal-1">AVALIAR</button>
+            </div>
+            
+
+            <div class="favoritar">
+             <p>Favoritar</p>
+            <button class="btnFavorito"><i class="fa-solid fa-heart"></i></i></button>
+        </div>
+        </div>
+        
+
+    <dialog id="modal-1">
+    
+    <div class="modalBody">
+
+        <ul class="nota">
+            <li class="star-icon ativo" data-avaliacao="1"></li>
+            <li class="star-icon" data-avaliacao="2"></li>
+            <li class="star-icon" data-avaliacao="3"></li>
+            <li class="star-icon" data-avaliacao="4"></li>
+            <li class="star-icon" data-avaliacao="5"></li>
+        </ul>
+        <br><br>
+        <div class="inputComentario">
+            <p>faça um comentário:</p>
+            <textarea name="" id="comentario"></textarea>
+        </div>
+
+        <button class="salvarAvaliacao" onclick="salvarAvaliacao()">Salvar</button>
+
+        <button class="close-modal" data-modal="modal-1">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    </dialog>
+
+    </div>
+    
+        
+    <!--dashboard-->
+    <hr>
     <section class="dashboard">
         <div>
             <canvas id="myChart1"></canvas>
@@ -55,33 +103,68 @@
         </div>
     </section>
 
-    <section>
+    <!--KPI's-->
+    <section class="kpis">
+        <span class="cardKpi">
+            <p class="tituloKpi">média de avaliações</p>
+            <p class="indicativoKpi" id="mediaAvaliacao"></p>
+        </span>
+        <span class="cardKpi">
+            <p class="tituloKpi">quantidade de comentários</p>
+            <p class="indicativoKpi" id="qtdComentarios"></p>
+        </span>
+        <span class="cardKpi">
+            <p class="tituloKpi">quantidade de favoritos</p>
+            <p class="indicativoKpi" ></p>
+        </span>
+        <span class="cardKpi">
+            <p class="tituloKpi">maior bilheteria</p>
+            <p class="indicativoKpi"></p>
+        </span>
+    </section>
+    <hr>
+    <section class="showComentarios">
+        <p>oque a galera esta comentando:</p>
+        <span class="comentarios" id="comentarios"></span>
+    </section>
+
         <div class="footer">
             © Direct.on 2026 Feito Por Nathália Albuquerque
         </div>
-    </section>
 
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx1 = document.getElementById('myChart1');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5],
-                    borderWidth: 1
-                    ,
-                    backgroundColor: '#ad0000'
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                
-            }
-        });
+        async function carregarGrafico() {
+    const resposta = await fetch('http://localhost:3333/diretores/alimentar-grafico-barras/1');
+    const dados = await resposta.json();
+
+    // Organiza os dados para o gráfico
+    const notas = [1, 2, 3, 4, 5];
+    const quantidades = notas.map(nota => {
+        const encontrado = dados.find(d => d.nota == nota);
+        return encontrado ? encontrado.quantidade : 0;
+    });
+
+    const ctx1 = document.getElementById('myChart1');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Nota 1', 'Nota 2', 'Nota 3', 'Nota 4', 'Nota 5'],
+            datasets: [{
+                label: 'Quantidade de avaliações por nota',
+                data: quantidades,
+                borderWidth: 1,
+                backgroundColor: '#ad0000'
+            }]
+        },
+        options: {
+            indexAxis: 'y'
+        }
+    });
+}
+
+carregarGrafico();
 
         const ctx2 = document.getElementById('myChart2');
 new Chart(ctx2, {
@@ -132,5 +215,113 @@ new Chart(ctx2, {
             `;
         }
     </script>
+  
 </body>
 </html>
+<script>
+    var stars = document.querySelectorAll('.star-icon');
+
+    document.addEventListener('click', function(capturarNota){
+        var classStar = capturarNota.target.classList;
+        if(!classStar.contains('ativo')){
+            stars.forEach(function(star){
+                star.classList.remove('ativo');
+            });
+            classStar.add('ativo');
+            console.log(capturarNota.target.getAttribute('data-avaliacao'));
+        }
+    });
+
+    const openButtons = document.querySelectorAll('.open-modal');
+    
+    openButtons.forEach(button =>{
+        button.addEventListener('click', () =>{
+            const modalId = button.getAttribute('data-modal');
+            const modal = document.getElementById(modalId);
+
+            modal.showModal();
+        })
+    });
+    
+    const closeButtons = document.querySelectorAll('.close-modal');
+    
+    closeButtons.forEach(button =>{
+        button.addEventListener('click', () =>{
+            const modalId = button.getAttribute('data-modal');
+            const modal = document.getElementById(modalId);
+
+            modal.close();
+        })
+    });
+
+    async function salvarAvaliacao(){
+        let comentario = document.getElementById('comentario').value;
+        let nota = document.querySelector('.star-icon.ativo').getAttribute('data-avaliacao');
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+        const fkUsuario = usuarioLogado.usuario.id;
+        const fkDiretor = 1; // id do Hayao Miyazaki no banco
+
+
+         if (nota == "" && comentario == "") {
+            return alert('Preencha todos os campos');
+        }
+
+        try {
+            const resposta = await fetch('http://localhost:3333/diretores/salvar-avaliacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    notaServer: nota,
+                    comentarioServer: comentario,
+                    fkUsuarioServer: fkUsuario,
+                    fkDiretorServer: fkDiretor
+                })
+            });
+
+            if (resposta.ok) {
+                alert('avaliação salva');
+                
+            } else {
+                const erro = await resposta.text();
+                alert('Erro: ' + erro);
+            }
+        } catch (e) {
+            alert('Erro ao conectar com o servidor');
+        }
+
+    }
+
+    //KPI média de avaliações
+  async function carregarKpiMedia() {
+    const resposta = await fetch('http://localhost:3333/diretores/alimentar-kpi-media/1');
+    const dados = await resposta.json();
+    const media = dados[0].media;
+    document.getElementById('mediaAvaliacao').innerText = media;
+}
+
+carregarKpiMedia();
+
+//KPI quantidade de comentários
+  async function carregarKpiQtdComentarios() {
+    const resposta = await fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-comentarios/1');
+    const dados = await resposta.json();
+    const qtdComentarios = dados[0].total
+    document.getElementById('qtdComentarios').innerText = qtdComentarios;
+}
+
+carregarKpiQtdComentarios();
+
+async function carregarComentarios() {
+    const resposta = await fetch('http://localhost:3333/diretores/coletar-comentario/1');
+    const dados = await resposta.json();
+    
+    const container = document.getElementById('comentarios');
+    container.innerHTML = '';
+    
+    for (var i = 0; i < dados.length; i++) {
+        container.innerHTML += `<span>${dados[i].nomeUsuario}:${dados[i].coment}<br></span>`;
+    }
+}
+
+carregarComentarios();
+</script>
