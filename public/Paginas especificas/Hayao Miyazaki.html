@@ -58,7 +58,7 @@
 
             <div class="favoritar">
              <p>Favoritar</p>
-            <button class="btnFavorito"><i class="fa-solid fa-heart"></i></i></button>
+            <button class="btnFavorito"><i class="fa-regular fa-heart"></i></i></button>
         </div>
         </div>
         
@@ -123,10 +123,11 @@
         </span>
     </section>
     <hr>
-    <section class="showComentarios">
-        <p>oque a galera esta comentando:</p>
-        <span class="comentarios" id="comentarios"></span>
-    </section>
+   <section class="showComentarios">
+    <p>oque a galera esta comentando:</p>
+
+    <div id="comentarios"></div>
+</section>
 
         <div class="footer">
             © Direct.on 2026 Feito Por Nathália Albuquerque
@@ -311,17 +312,52 @@ carregarKpiMedia();
 
 carregarKpiQtdComentarios();
 
-async function carregarComentarios() {
-    const resposta = await fetch('http://localhost:3333/diretores/coletar-comentario/1');
-    const dados = await resposta.json();
-    
-    const container = document.getElementById('comentarios');
-    container.innerHTML = '';
-    
-    for (var i = 0; i < dados.length; i++) {
-        container.innerHTML += `<span>${dados[i].nomeUsuario}:${dados[i].coment}<br></span>`;
-    }
+function carregarComentarios() {
+    fetch('http://localhost:3333/diretores/coletar-comentario/1')
+        .then(resposta => resposta.json())
+        .then(dados => {
+
+            const container = document.getElementById('comentarios');
+
+            container.innerHTML = '';
+
+            for (var i = 0; i < dados.length; i++) {
+
+                container.innerHTML += `
+                    <div class="comentario">${dados[i].nomeUsuario}:<br>${dados[i].coment}</div>
+                `;
+            }
+        });
 }
 
-carregarComentarios();
+window.onload = carregarComentarios;
+
+
+document.querySelector('.btnFavorito').addEventListener('click', async () => {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    const fkUsuario = usuarioLogado.usuario.id;
+    const fkDiretor = 1;
+
+    try {
+            const resposta = await fetch('http://localhost:3333/diretores/salvar-favorito', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fkUsuarioServer: fkUsuario,
+                    fkDiretorServer: fkDiretor
+                })
+            });
+
+            if (resposta.ok) {
+                alert('favorito declarado');
+                
+            } else {
+                const erro = await resposta.text();
+                alert('Erro: ' + erro);
+            }
+        } catch (e) {
+            alert('Erro ao conectar com o servidor');
+        }
+
+});
 </script>

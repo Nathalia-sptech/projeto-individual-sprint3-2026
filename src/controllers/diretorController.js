@@ -13,6 +13,16 @@ function salvarAvaliacao(req, res, nota, comentario, fkUsuario, fkDiretor) {
         });
 }
 
+function favoritar(req, res, fkUsuario, fkDiretor) {
+    diretorModel.favoritar(fkUsuario, fkDiretor)
+        .then(function (resultado) {
+            res.json({ sucesso: true });
+        }).catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 function alimentarGraficoBarras(req, res,fkDiretor){
     diretorModel.alimentarGraficoBarras(fkDiretor)
         .then(function (resultado) {
@@ -53,6 +63,7 @@ function coletarComentario(req, res,fkDiretor){
 }
 module.exports = {
     salvarAvaliacao,
+    favoritar,
     alimentarGraficoBarras,
     alimentarKpiMedia,
     alimentarKpiQtdComentarios,

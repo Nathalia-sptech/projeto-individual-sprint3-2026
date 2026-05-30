@@ -10,6 +10,17 @@ function salvarAvaliacao(nota, fkUsuario, fkDiretor) {
     return database.executar(instrucaoSql);
 }
 
+// Favoritar
+function favoritar(fkUsuario, fkDiretor) {
+    var instrucaoSql = `
+        UPDATE DirectOn.usuario 
+        SET fk_diretor_favorito = ${fkDiretor}
+        WHERE id = ${fkUsuario};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 function salvarComentario(comentario, fkUsuario, fkDiretor) {
     var instrucaoSql = `
         INSERT INTO DirectOn.comentario (fk_usuario, fk_diretor, texto)
@@ -67,6 +78,7 @@ WHERE c.fk_diretor = ${fkDiretor}
 }
 module.exports = {
     salvarAvaliacao,
+    favoritar,
     salvarComentario,
     alimentarGraficoBarras,
     alimentarKpiMedia,

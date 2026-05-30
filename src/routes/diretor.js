@@ -12,6 +12,13 @@ router.post("/salvar-avaliacao", function (req, res) {
     diretorController.salvarAvaliacao(req, res, nota, comentario, fkUsuario, fkDiretor);
 });
 
+router.post("/salvar-favorito", function (req, res) {
+    var fkUsuario = req.body.fkUsuarioServer;
+    var fkDiretor = req.body.fkDiretorServer;
+
+    diretorController.favoritar(req, res, fkUsuario, fkDiretor);
+});
+
 router.get("/alimentar-grafico-barras/:fkDiretor", function (req, res) {
     var fkDiretor = req.params.fkDiretor;
     diretorController.alimentarGraficoBarras(req, res, fkDiretor);
