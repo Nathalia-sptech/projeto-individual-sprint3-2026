@@ -62,7 +62,7 @@
                 const dados = await resposta.json();
                 localStorage.setItem('usuarioLogado', JSON.stringify(dados));
                 alert('Login realizado com sucesso!');
-                window.location = "Perfil.html";
+                window.location = "index.html";
             } else {
                 const erro = await resposta.text();
                 alert('Erro: ' + erro);

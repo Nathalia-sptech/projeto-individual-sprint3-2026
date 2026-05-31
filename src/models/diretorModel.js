@@ -44,6 +44,18 @@ function alimentarGraficoBarras(fkDiretor){
 
 }
 
+function alimentarGraficoEvolucaoNotas(fkDiretor) {
+    var instrucaoSql = `
+        SELECT DATE_FORMAT(data, '%m/%Y') as mes, ROUND(AVG(nota), 1) as media
+        FROM DirectOn.avaliacao
+        WHERE fk_diretor = ${fkDiretor}
+        GROUP BY DATE_FORMAT(data, '%m/%Y')
+        ORDER BY MIN(data);
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 // KPI de média de avaliações
 function alimentarKpiMedia(fkDiretor){
     var instrucaoSql = `
@@ -64,6 +76,16 @@ function alimentarKpiMedia(fkDiretor){
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
+ // KPI Quantidade de Favoritos
+ function alimentarKpiQtdFavoritos(fkDiretor){
+    var instrucaoSql = `
+        SELECT COUNT(fk_diretor_favorito) as favoritos 
+        FROM DirectOn.usuario 
+        WHERE fk_diretor_favorito = ${fkDiretor};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
 
 // coletando os comentários para a sessão de comentários
  function coletarComentario(fkDiretor){
@@ -72,6 +94,7 @@ function alimentarKpiMedia(fkDiretor){
 FROM DirectOn.comentario c
 INNER JOIN DirectOn.usuario u ON c.fk_usuario = u.id
 WHERE c.fk_diretor = ${fkDiretor}
+ORDER BY data DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -81,7 +104,9 @@ module.exports = {
     favoritar,
     salvarComentario,
     alimentarGraficoBarras,
+    alimentarGraficoEvolucaoNotas,
     alimentarKpiMedia,
     alimentarKpiQtdComentarios,
+    alimentarKpiQtdFavoritos,
     coletarComentario
 }

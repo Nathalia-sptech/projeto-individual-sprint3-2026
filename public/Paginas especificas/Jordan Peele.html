@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayao Miyazaki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <script>
+        if (!localStorage.getItem('usuarioLogado')) {
+            alert('Você precisa estar logado para acessar esta página!');
+            window.location = "../login.html";
+        }
+    </script>
+
+    <header>
+        <a class="logo" href="../index.html">Direct.on</a>
+        <p>Jordan Peele</p>
+        
+    </header>
+    
+    <section class="historia">
+        <div class="foto">
+            <img src="../style\assets\Jordan Peele.svg" alt="">
+            <ul>
+                <li>21 de fevereiro de 1979 (47 anos)</li>
+                <li>Nova York, Estados Unidos (cidade natal)</li>
+                <li>(Oscar: Melhor Roteiro Original) Corra! — 2018</li>
+                <p>"Quando eu era jovem, pensava que este era o melhor trabalho do mundo, mas agora sei que é uma maldição... uma bela maldição."</p>
+            </ul>
+        </div>
+        <p>filmes populares</p>
+        <div class="filmes">
+            <img src="..\style\assets\Jordan 1.svg" alt="">
+            <img src="..\style\assets\Jordan 2.svg" alt="">
+            <img src="..\style\assets\Jordan 3.svg" alt="">
+
+        </div>
+    </section>
+    <hr>
+
+    <!--modal de avaliação e comentário-->
+    <div class="avaliacao">
+        <div class="foraModal">
+            <div class="apresentarModal">
+                <p>avalie esse diretor:</p>
+            <button class="open-modal" data-modal="modal-1">AVALIAR</button>
+            </div>
+            
+
+            <div class="favoritar">
+             <p>Favoritar</p>
+            <button class="btnFavorito"><i class="fa-regular fa-heart"></i></i></button>
+        </div>
+        </div>
+        
+
+    <dialog id="modal-1">
+    
+    <div class="modalBody">
+
+        <ul class="nota">
+            <li class="star-icon ativo" data-avaliacao="1"></li>
+            <li class="star-icon" data-avaliacao="2"></li>
+            <li class="star-icon" data-avaliacao="3"></li>
+            <li class="star-icon" data-avaliacao="4"></li>
+            <li class="star-icon" data-avaliacao="5"></li>
+        </ul>
+        <br><br>
+        <div class="inputComentario">
+            <p>faça um comentário:</p>
+            <textarea name="" id="comentario"></textarea>
+        </div>
+
+        <button class="salvarAvaliacao" onclick="salvarAvaliacao()">Salvar</button>
+
+        <button class="close-modal" data-modal="modal-1">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    </dialog>
+
+    </div>
+    
+        
+    <!--dashboard-->
+    <hr>
+    <section class="dashboard">
+        <div>
+            <canvas id="myChart1"></canvas>
+        </div>
+        <div>
+            <canvas id="myChart2"></canvas>
+        </div>
+    </section>
+
+    <!--KPI's-->
+    <section class="kpis">
+        <span class="cardKpi">
+            <p class="tituloKpi">média de avaliações</p>
+            <p class="indicativoKpi" id="mediaAvaliacao"></p>
+        </span>
+        <span class="cardKpi">
+            <p class="tituloKpi">quantidade de comentários</p>
+            <p class="indicativoKpi" id="qtdComentarios"></p>
+        </span>
+        <span class="cardKpi">
+            <p class="tituloKpi">numero de favoritos:</p>
+            <p class="indicativoKpi" id="favoritos" ></p>
+        </span>
+    </section>
+    <hr>
+   <section class="showComentarios">
+    <p>oque a galera esta comentando:</p>
+
+    <div id="comentarios"></div>
+</section>
+
+        <div class="footer">
+            © Direct.on 2026 Feito Por Nathália Albuquerque
+        </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function carregarGrafico() {
+    const resposta = await fetch('http://localhost:3333/diretores/alimentar-grafico-barras/4');
+    const dados = await resposta.json();
+
+    // Organiza os dados para o gráfico
+    const notas = [1, 2, 3, 4, 5];
+    const quantidades = notas.map(nota => {
+        const encontrado = dados.find(d => d.nota == nota);
+        return encontrado ? encontrado.quantidade : 0;
+    });
+
+    const ctx1 = document.getElementById('myChart1');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Nota 1', 'Nota 2', 'Nota 3', 'Nota 4', 'Nota 5'],
+            datasets: [{
+                label: 'Quantidade de avaliações por nota',
+                data: quantidades,
+                borderWidth: 1,
+                backgroundColor: '#ad0000'
+            }]
+        },
+        options: {
+            indexAxis: 'y'
+        }
+    });
+}
+
+carregarGrafico();
+
+        function carregarGraficoEvolucaoNotas() {
+    fetch('http://localhost:3333/diretores/alimentar-grafico-evolucao-notas/4')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        var labels = [];
+        var medias = [];
+
+        for (var i = 0; i < dados.length; i++) {
+            labels.push(dados[i].mes);
+            medias.push(dados[i].media);
+        }
+
+        const ctx2 = document.getElementById('myChart2');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Média de notas por mês',
+                    data: medias,
+                    borderWidth: 2,
+                    borderColor: '#f7b800',
+                    backgroundColor: 'rgba(247, 184, 0, 0.2)',
+                    pointBackgroundColor: '#f7b800',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 5,
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(247, 184, 0, 0.2)' }
+                    },
+                    x: {
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(247, 184, 0, 0.2)' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: 'white' }
+                    }
+                }
+            }
+        });
+    });
+}
+
+carregarGraficoEvolucaoNotas();
+
+
+
+        const usuario = localStorage.getItem('usuarioLogado');
+        const cadLog = document.getElementById('cadLog');
+
+        if (usuario) {
+            cadLog.innerHTML = `<a href="../Perfil.html"><button>Seu Perfil</button></a>`;
+        } else {
+            cadLog.innerHTML = `
+                <a href="../cadastro.html"><button>Cadastre-se</button></a>
+                <a href="../login.html"><button>Login</button></a>
+            `;
+        }
+    </script>
+  
+</body>
+</html>
+<script>
+   const stars = document.querySelectorAll('.star-icon');
+
+for (let i = 0; i < stars.length; i++) {
+    stars[i].addEventListener('click', function() {
+
+        for (let j = 0; j < stars.length; j++) {
+            stars[j].classList.remove('ativo');
+        }
+
+        for (let k = 0; k <= i; k++) {
+            stars[k].classList.add('ativo');
+        }
+
+        console.log(stars[i].dataset.avaliacao);
+    });
+}
+
+// Modais
+const openButtons = document.querySelectorAll('.open-modal');
+
+for (let i = 0; i < openButtons.length; i++) {
+    openButtons[i].addEventListener('click', function() {
+        const modalId = openButtons[i].getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        modal.showModal();
+    });
+}
+
+const closeButtons = document.querySelectorAll('.close-modal');
+
+for (let i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].addEventListener('click', function() {
+        const modalId = closeButtons[i].getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        modal.close();
+    });
+}
+
+// Salvar avaliação
+function salvarAvaliacao() {
+    const comentario = document.getElementById('comentario').value;
+    const nota = document.querySelector('.star-icon.ativo').getAttribute('data-avaliacao');
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    const fkUsuario = usuarioLogado.usuario.id;
+    const fkDiretor = 1;
+
+    if (nota == "" && comentario == "") {
+        return alert('Preencha todos os campos');
+    }
+
+    fetch('http://localhost:3333/diretores/salvar-avaliacao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            notaServer: nota,
+            comentarioServer: comentario,
+            fkUsuarioServer: fkUsuario,
+            fkDiretorServer: fkDiretor
+        })
+    })
+    .then(function(resposta) {
+        if (resposta.ok) {
+            alert('Avaliação salva');
+        } else {
+            return resposta.text().then(function(erro) {
+                alert('Erro: ' + erro);
+            });
+        }
+    })
+    .catch(function() {
+        alert('Erro ao conectar com o servidor');
+    });
+}
+
+// Botão favorito (toggle visual)
+const btnFavorito = document.querySelector('.btnFavorito');
+
+btnFavorito.addEventListener('click', function() {
+    const icone = btnFavorito.querySelector('i');
+
+    btnFavorito.classList.toggle('ativo');
+
+    if (btnFavorito.classList.contains('ativo')) {
+        icone.classList.remove('fa-regular');
+        icone.classList.add('fa-solid');
+    } else {
+        icone.classList.remove('fa-solid');
+        icone.classList.add('fa-regular');
+    }
+});
+
+// Salvar favorito no servidor
+document.querySelector('.btnFavorito').addEventListener('click', function() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    const fkUsuario = usuarioLogado.usuario.id;
+    const fkDiretor = 1;
+
+    fetch('http://localhost:3333/diretores/salvar-favorito', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            fkUsuarioServer: fkUsuario,
+            fkDiretorServer: fkDiretor
+        })
+    })
+    .then(function(resposta) {
+        if (resposta.ok) {
+            alert('Favorito declarado');
+        } else {
+            return resposta.text().then(function(erro) {
+                alert('Erro: ' + erro);
+            });
+        }
+    })
+    .catch(function() {
+        alert('Erro ao conectar com o servidor');
+    });
+});
+
+// KPI média de avaliações
+function carregarKpiMedia() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-media/4')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const media = dados[0].media;
+        document.getElementById('mediaAvaliacao').innerText = media;
+    });
+}
+
+carregarKpiMedia();
+
+// KPI quantidade de comentários
+function carregarKpiQtdComentarios() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-comentarios/4')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const qtdComentarios = dados[0].total;
+        document.getElementById('qtdComentarios').innerText = qtdComentarios;
+    });
+}
+
+carregarKpiQtdComentarios();
+
+// KPI quantidade de Favoritos
+function carregarKpiQtdFavoritos() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-favoritos/4')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const qtdFavoritos = dados[0].favoritos;
+        document.getElementById('favoritos').innerText = qtdFavoritos;
+    });
+}
+
+carregarKpiQtdFavoritos();
+
+// Carregar comentários
+function carregarComentarios() {
+    fetch('http://localhost:3333/diretores/coletar-comentario/4')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const container = document.getElementById('comentarios');
+        container.innerHTML = '';
+
+        for (var i = 0; i < dados.length; i++) {
+            container.innerHTML += `
+                <div class="comentario">${dados[i].nomeUsuario}:<br>${dados[i].coment}</div>
+            `;
+        }
+    });
+}
+
+window.onload = carregarComentarios;
+</script>

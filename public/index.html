@@ -9,13 +9,9 @@
 <body>
     <header>
         <span class="logo">Direct.on</span>
-        <nav>
-            <li class="links">
-               <a href="#">Conheça</a>
-               <a href="#">quiz</a>
-            </li>
-        </nav>
+        <span class="saudacao" id="saudacao"></span>
         <div class="cadLog" id="cadLog"></div>
+        <button class="btnSair" id="btnSair" onclick="sair()">Sair</button>
     </header>
 
     <section class="banner_video">
@@ -92,15 +88,24 @@
 
     if (usuario) {
         const dados = JSON.parse(usuario);
-        cadLog.innerHTML = `
-            <a href="Perfil.html"><button>Seu Perfil</button></a>
-        `;
+        document.getElementById('saudacao').innerText = `Olá, ${dados.usuario.usuario}!`
+    
     } else {
         cadLog.innerHTML = `
             <a href="cadastro.html"><button>Cadastre-se</button></a>
             <a href="login.html"><button>Login</button></a>
         `;
     }
+
+const btnSair = document.getElementById('btnSair');
+
+if (!localStorage.getItem('usuarioLogado')) {
+    btnSair.style.display = 'none';
+}  
+function sair() {
+    localStorage.removeItem('usuarioLogado');
+    window.location = "index.html";
+}
 </script>
 </html>
 

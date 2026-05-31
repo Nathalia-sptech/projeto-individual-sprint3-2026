@@ -17,13 +17,8 @@
 
     <header>
         <a class="logo" href="../index.html">Direct.on</a>
-        <nav>
-            <li class="links">
-               <a href="#">Conheça</a>
-               <a href="#">quiz</a>
-            </li>
-        </nav>
-        <div class="cadLog" id="cadLog"></div>
+        <p>Hayao Miyazaki</p>
+        
     </header>
     
     <section class="historia">
@@ -114,12 +109,8 @@
             <p class="indicativoKpi" id="qtdComentarios"></p>
         </span>
         <span class="cardKpi">
-            <p class="tituloKpi">quantidade de favoritos</p>
-            <p class="indicativoKpi" ></p>
-        </span>
-        <span class="cardKpi">
-            <p class="tituloKpi">maior bilheteria</p>
-            <p class="indicativoKpi"></p>
+            <p class="tituloKpi">numero de favoritos:</p>
+            <p class="indicativoKpi" id="favoritos" ></p>
         </span>
     </section>
     <hr>
@@ -167,40 +158,59 @@
 
 carregarGrafico();
 
+        function carregarGraficoEvolucaoNotas() {
+    fetch('http://localhost:3333/diretores/alimentar-grafico-evolucao-notas/1')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        var labels = [];
+        var medias = [];
+
+        for (var i = 0; i < dados.length; i++) {
+            labels.push(dados[i].mes);
+            medias.push(dados[i].media);
+        }
+
         const ctx2 = document.getElementById('myChart2');
-new Chart(ctx2, {
-    type: 'radar',
-    data: {
-        labels: ['Terror', 'Drama', 'Romance', 'Comédia', 'Ação'],
-        datasets: [{
-            label: 'Quantidade de filmes por gênero',
-            data: [0, 10, 6, 7, 3],
-            borderWidth: 2,
-            borderColor: '#f7b800',
-            backgroundColor: 'rgba(247, 184, 0, 0.2)',
-            pointBackgroundColor: '#f7b800'
-        }]
-    },
-    options: {
-        scales: {
-            r: {
-                grid: {
-                    color: '#f7b800'
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Média de notas por mês',
+                    data: medias,
+                    borderWidth: 2,
+                    borderColor: '#f7b800',
+                    backgroundColor: 'rgba(247, 184, 0, 0.2)',
+                    pointBackgroundColor: '#f7b800',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 5,
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(247, 184, 0, 0.2)' }
+                    },
+                    x: {
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(247, 184, 0, 0.2)' }
+                    }
                 },
-                angleLines: {
-                    color: '#f7b800'
-                },
-                pointLabels: {
-                    color: 'white'
-                },
-                ticks: {
-                    color: 'white',
-                    backdropColor: 'transparent'
+                plugins: {
+                    legend: {
+                        labels: { color: 'white' }
+                    }
                 }
             }
-        }
-    }
-});
+        });
+    });
+}
+
+carregarGraficoEvolucaoNotas();
 
 
 
@@ -220,144 +230,184 @@ new Chart(ctx2, {
 </body>
 </html>
 <script>
-    var stars = document.querySelectorAll('.star-icon');
+   const stars = document.querySelectorAll('.star-icon');
 
-    document.addEventListener('click', function(capturarNota){
-        var classStar = capturarNota.target.classList;
-        if(!classStar.contains('ativo')){
-            stars.forEach(function(star){
-                star.classList.remove('ativo');
-            });
-            classStar.add('ativo');
-            console.log(capturarNota.target.getAttribute('data-avaliacao'));
-        }
-    });
+for (let i = 0; i < stars.length; i++) {
+    stars[i].addEventListener('click', function() {
 
-    const openButtons = document.querySelectorAll('.open-modal');
-    
-    openButtons.forEach(button =>{
-        button.addEventListener('click', () =>{
-            const modalId = button.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-
-            modal.showModal();
-        })
-    });
-    
-    const closeButtons = document.querySelectorAll('.close-modal');
-    
-    closeButtons.forEach(button =>{
-        button.addEventListener('click', () =>{
-            const modalId = button.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-
-            modal.close();
-        })
-    });
-
-    async function salvarAvaliacao(){
-        let comentario = document.getElementById('comentario').value;
-        let nota = document.querySelector('.star-icon.ativo').getAttribute('data-avaliacao');
-        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-        const fkUsuario = usuarioLogado.usuario.id;
-        const fkDiretor = 1; // id do Hayao Miyazaki no banco
-
-
-         if (nota == "" && comentario == "") {
-            return alert('Preencha todos os campos');
+        for (let j = 0; j < stars.length; j++) {
+            stars[j].classList.remove('ativo');
         }
 
-        try {
-            const resposta = await fetch('http://localhost:3333/diretores/salvar-avaliacao', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    notaServer: nota,
-                    comentarioServer: comentario,
-                    fkUsuarioServer: fkUsuario,
-                    fkDiretorServer: fkDiretor
-                })
-            });
-
-            if (resposta.ok) {
-                alert('avaliação salva');
-                
-            } else {
-                const erro = await resposta.text();
-                alert('Erro: ' + erro);
-            }
-        } catch (e) {
-            alert('Erro ao conectar com o servidor');
+        for (let k = 0; k <= i; k++) {
+            stars[k].classList.add('ativo');
         }
 
-    }
-
-    //KPI média de avaliações
-  async function carregarKpiMedia() {
-    const resposta = await fetch('http://localhost:3333/diretores/alimentar-kpi-media/1');
-    const dados = await resposta.json();
-    const media = dados[0].media;
-    document.getElementById('mediaAvaliacao').innerText = media;
+        console.log(stars[i].dataset.avaliacao);
+    });
 }
 
-carregarKpiMedia();
+// Modais
+const openButtons = document.querySelectorAll('.open-modal');
 
-//KPI quantidade de comentários
-  async function carregarKpiQtdComentarios() {
-    const resposta = await fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-comentarios/1');
-    const dados = await resposta.json();
-    const qtdComentarios = dados[0].total
-    document.getElementById('qtdComentarios').innerText = qtdComentarios;
+for (let i = 0; i < openButtons.length; i++) {
+    openButtons[i].addEventListener('click', function() {
+        const modalId = openButtons[i].getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        modal.showModal();
+    });
 }
 
-carregarKpiQtdComentarios();
+const closeButtons = document.querySelectorAll('.close-modal');
 
-function carregarComentarios() {
-    fetch('http://localhost:3333/diretores/coletar-comentario/1')
-        .then(resposta => resposta.json())
-        .then(dados => {
-
-            const container = document.getElementById('comentarios');
-
-            container.innerHTML = '';
-
-            for (var i = 0; i < dados.length; i++) {
-
-                container.innerHTML += `
-                    <div class="comentario">${dados[i].nomeUsuario}:<br>${dados[i].coment}</div>
-                `;
-            }
-        });
+for (let i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].addEventListener('click', function() {
+        const modalId = closeButtons[i].getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        modal.close();
+    });
 }
 
-window.onload = carregarComentarios;
-
-
-document.querySelector('.btnFavorito').addEventListener('click', async () => {
+// Salvar avaliação
+function salvarAvaliacao() {
+    const comentario = document.getElementById('comentario').value;
+    const nota = document.querySelector('.star-icon.ativo').getAttribute('data-avaliacao');
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
     const fkUsuario = usuarioLogado.usuario.id;
     const fkDiretor = 1;
 
-    try {
-            const resposta = await fetch('http://localhost:3333/diretores/salvar-favorito', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fkUsuarioServer: fkUsuario,
-                    fkDiretorServer: fkDiretor
-                })
-            });
+    if (nota == "" && comentario == "") {
+        return alert('Preencha todos os campos');
+    }
 
-            if (resposta.ok) {
-                alert('favorito declarado');
-                
-            } else {
-                const erro = await resposta.text();
+    fetch('http://localhost:3333/diretores/salvar-avaliacao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            notaServer: nota,
+            comentarioServer: comentario,
+            fkUsuarioServer: fkUsuario,
+            fkDiretorServer: fkDiretor
+        })
+    })
+    .then(function(resposta) {
+        if (resposta.ok) {
+            alert('Avaliação salva');
+        } else {
+            return resposta.text().then(function(erro) {
                 alert('Erro: ' + erro);
-            }
-        } catch (e) {
-            alert('Erro ao conectar com o servidor');
+            });
         }
+    })
+    .catch(function() {
+        alert('Erro ao conectar com o servidor');
+    });
+}
 
+// Botão favorito (toggle visual)
+const btnFavorito = document.querySelector('.btnFavorito');
+
+btnFavorito.addEventListener('click', function() {
+    const icone = btnFavorito.querySelector('i');
+
+    btnFavorito.classList.toggle('ativo');
+
+    if (btnFavorito.classList.contains('ativo')) {
+        icone.classList.remove('fa-regular');
+        icone.classList.add('fa-solid');
+    } else {
+        icone.classList.remove('fa-solid');
+        icone.classList.add('fa-regular');
+    }
 });
+
+// Salvar favorito no servidor
+document.querySelector('.btnFavorito').addEventListener('click', function() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    const fkUsuario = usuarioLogado.usuario.id;
+    const fkDiretor = 1;
+
+    fetch('http://localhost:3333/diretores/salvar-favorito', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            fkUsuarioServer: fkUsuario,
+            fkDiretorServer: fkDiretor
+        })
+    })
+    .then(function(resposta) {
+        if (resposta.ok) {
+            alert('Favorito declarado');
+        } else {
+            return resposta.text().then(function(erro) {
+                alert('Erro: ' + erro);
+            });
+        }
+    })
+    .catch(function() {
+        alert('Erro ao conectar com o servidor');
+    });
+});
+
+// KPI média de avaliações
+function carregarKpiMedia() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-media/1')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const media = dados[0].media;
+        document.getElementById('mediaAvaliacao').innerText = media;
+    });
+}
+
+carregarKpiMedia();
+
+// KPI quantidade de comentários
+function carregarKpiQtdComentarios() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-comentarios/1')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const qtdComentarios = dados[0].total;
+        document.getElementById('qtdComentarios').innerText = qtdComentarios;
+    });
+}
+
+carregarKpiQtdComentarios();
+
+// KPI quantidade de Favoritos
+function carregarKpiQtdFavoritos() {
+    fetch('http://localhost:3333/diretores/alimentar-kpi-Qtd-favoritos/1')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const qtdFavoritos = dados[0].favoritos;
+        document.getElementById('favoritos').innerText = qtdFavoritos;
+    });
+}
+
+carregarKpiQtdFavoritos();
+
+// Carregar comentários
+function carregarComentarios() {
+    fetch('http://localhost:3333/diretores/coletar-comentario/1')
+    .then(function(resposta) {
+        return resposta.json();
+    })
+    .then(function(dados) {
+        const container = document.getElementById('comentarios');
+        container.innerHTML = '';
+
+        for (var i = 0; i < dados.length; i++) {
+            container.innerHTML += `
+                <div class="comentario">${dados[i].nomeUsuario}:<br>${dados[i].coment}</div>
+            `;
+        }
+    });
+}
+
+window.onload = carregarComentarios;
 </script>

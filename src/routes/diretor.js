@@ -24,6 +24,11 @@ router.get("/alimentar-grafico-barras/:fkDiretor", function (req, res) {
     diretorController.alimentarGraficoBarras(req, res, fkDiretor);
 });
 
+router.get("/alimentar-grafico-evolucao-notas/:fkDiretor", function(req, res) {
+    var fkDiretor = req.params.fkDiretor;
+    diretorController.alimentarGraficoEvolucaoNotas(req, res, fkDiretor);
+});
+
 router.get("/alimentar-kpi-media/:fkDiretor", function (req, res) {
     var fkDiretor = req.params.fkDiretor;
     diretorController.alimentarKpiMedia(req, res, fkDiretor);
@@ -32,6 +37,10 @@ router.get("/alimentar-kpi-media/:fkDiretor", function (req, res) {
 router.get("/alimentar-kpi-Qtd-comentarios/:fkDiretor", function (req, res) {
     var fkDiretor = req.params.fkDiretor;
     diretorController.alimentarKpiQtdComentarios(req, res, fkDiretor);
+});
+router.get("/alimentar-kpi-Qtd-favoritos/:fkDiretor", function (req, res) {
+    var fkDiretor = req.params.fkDiretor;
+    diretorController.alimentarKpiQtdFavoritos(req, res, fkDiretor);
 });
 
 router.get("/coletar-comentario/:fkDiretor", function (req, res) {
