@@ -273,7 +273,7 @@ function salvarAvaliacao() {
     const nota = document.querySelector('.star-icon.ativo').getAttribute('data-avaliacao');
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
     const fkUsuario = usuarioLogado.usuario.id;
-    const fkDiretor = 1;
+    const fkDiretor = 2;
 
     if (nota == "" && comentario == "") {
         return alert('Preencha todos os campos');
@@ -324,7 +324,7 @@ btnFavorito.addEventListener('click', function() {
 document.querySelector('.btnFavorito').addEventListener('click', function() {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
     const fkUsuario = usuarioLogado.usuario.id;
-    const fkDiretor = 1;
+    const fkDiretor = 2;
 
     fetch('http://localhost:3333/diretores/salvar-favorito', {
         method: 'POST',
